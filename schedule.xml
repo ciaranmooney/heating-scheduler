@@ -7,6 +7,11 @@
             <temperature>18</temperature>
         </event>
         <event>
+            <start>1300</start>
+            <stop>1400</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
             <start>1930</start>
             <stop>2100</stop>
             <temperature>18</temperature>
