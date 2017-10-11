@@ -21,16 +21,16 @@ def log(message, debug):
         print(message)
 
 class event(object):
-    '''
+    ''' 
     '''
 
-    def __init__(self):
+    def __init__(self, instruction):
         '''
         '''
         pass
 
 class scheduler(object):
-    '''
+    ''' Scheduler object to check what heating is required and when.
     '''
 
     def __init__(self, scheduleXMLfile):
@@ -41,18 +41,20 @@ class scheduler(object):
         self.parse(self.root)
 
     def parse(self, XML):
+        ''' Goes through the ET object and creates a list of days which
+            contains 7 elements (Mon, Tues, Wed ....). Each elemtn is an 
+            event object, which can be later used to check time/temps etc.
         '''
-        '''
-        self.events = []
+        self.days = []
         for day in XML:
             events = []
             for instruction in day:
-                events.append(event(instruction)) 
+                events.append(event(instruction))
             
-            self.events.append(events)
+            self.days.append(events)
 
     def fileChanged(self):
-        '''
+        ''' Used to check if XML schdule file has chagned since last parsed.
         '''
         #check if file changed
         #yes, re-parse and update object with new informaton
@@ -60,7 +62,7 @@ class scheduler(object):
         pass
 
     def check(self, now)
-        '''
+        ''' Check if heat is required, if so what temperature.
         '''
         self.fileChanged()
         day = now.getdotw() ###
@@ -75,11 +77,13 @@ def checkTemp():
     pass
 
 def heatingOn():
-    '''
+    ''' Sends ON command to Arduino mini to turn heating on. The ON command 
+        needs to be resent periodically, but this is handled by the arduino.
     '''
 
 def heatingOff():
-    '''
+    ''' Sends OFF command to Arduino mini to turn heating off. The OFF command
+        needs to be resent periodically, but this is handled by the arduino.
     '''
     pass
 
