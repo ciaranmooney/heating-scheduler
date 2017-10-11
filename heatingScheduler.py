@@ -61,7 +61,7 @@ class scheduler(object):
         #no, exit wihtout change
         pass
 
-    def check(self, now)
+    def check(self, now):
         ''' Check if heat is required, if so what temperature.
         '''
         self.fileChanged()
@@ -88,12 +88,15 @@ def heatingOff():
     pass
 
 def run(scheduleXMLfile, debug):
-    ''' Main loop which checks to see if a command needs to be issued.
+    ''' Main loop which checks the schedule to see if heating is required and
+        what temperature is required. 
+        
+        * Schedule data comes from an XML file
+        * Temperature from a database (5 minute average)
+        * Boiler turned on by issuing a command to an Arduino Pro mini that
+        can replay ON/OFF command of boilers OEM thermostat.
     '''
-    # check schedule
-    # check temperature
-    # action required
-    # wait
+    
     schedule = scheduler(scheduleXMLfile)
     while True:
         now = datetime.now()
@@ -109,7 +112,8 @@ def run(scheduleXMLfile, debug):
             log("Heating off", debug)
             heatingOff()
         
-        time.sleep(15)
+        time.sleep(15) # Temperature average doesn't change in less than 60
+                       # seconds, so no need to run too often.
 
-if __name == '__main__':
+if __name__ == '__main__':
     run(SCHEDULE, DEBUG)
