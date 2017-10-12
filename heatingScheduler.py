@@ -94,7 +94,7 @@ def run(scheduleXMLfile, debug):
         * Schedule data comes from an XML file
         * Temperature from a database (5 minute average)
         * Boiler turned on by issuing a command to an Arduino Pro mini that
-        can replay ON/OFF command of boilers OEM thermostat.
+          can replay ON/OFF command of boilers OEM thermostat.
     '''
     
     schedule = scheduler(scheduleXMLfile)
