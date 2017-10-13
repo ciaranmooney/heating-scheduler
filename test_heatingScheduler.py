@@ -5,33 +5,17 @@
 # contact@cmooney.co.uk
 # Tests for heating-scheduler.
 
-import unittest
-from unittest import mock
-
+from unittest import TestCase, mock
 import heatingScheduler
 
-class example(unittest.TestCase):
-    '''
-    '''
-
-    def setUp(self):
-        '''
-        '''
-        pass
-
-    def text_example(self):
-        '''
-        '''
-
-class TestRun(unittest.TestCase):
+class TestRun(TestCase):
     ''' Tests the run function defined in heatingSchedule
     '''
 
     def setUp(self):
         '''
         '''
-
-        self.XML = "test-data/schedule-1.xml"
+        self.XML = 'test-data/schedule.xml'
 
     def test_scheduler_init(self):
         ''' Test that when run(self.XML) called that a scheduler object is 
@@ -43,11 +27,16 @@ class TestRun(unittest.TestCase):
         ''' Test that when run(self.XML) called with a bad XML file that it
             produces the correct error.
         '''
+
+        self.XML = 'test-data/schedule-1.xml'
+        heatingScheduler.run(self.XML)
         self.assertTrue(False)
 
     def test_scheduler_heatingNotRequired(self):
         ''' Checks that the heatingOff function is called.
         '''
+        @mock.patch('heatingScheduler.sheduler.check', return_value=False)
+        heatingScheduler.run(self.XML)
         self.assertTrue(False)
 
     def test_scheduler_heatingRequiredTempLow(self):

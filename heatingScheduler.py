@@ -70,6 +70,8 @@ class scheduler(object):
         for each in self.events(day):
             if each.start < time < each.stop:
                 return True, event.temp
+        else:
+            return False
 
 def checkTemp():
     '''
@@ -87,7 +89,7 @@ def heatingOff():
     '''
     pass
 
-def run(scheduleXMLfile, debug):
+def run(scheduleXMLfile, debug=False):
     ''' Main loop which checks the schedule to see if heating is required and
         what temperature is required. 
         
