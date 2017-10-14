@@ -1,14 +1,15 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # Ciarán Mooney 2017
 # contact@cmooney.co.uk
 # Tests for heating-scheduler.
 
-from unittest import TestCase, mock
+import unittest
+import unittest.mock as mock
 import heatingScheduler
 
-class TestRun(TestCase):
+class TestRun(unittest.TestCase):
     ''' Tests the run function defined in heatingSchedule
     '''
 
@@ -32,10 +33,10 @@ class TestRun(TestCase):
         heatingScheduler.run(self.XML)
         self.assertTrue(False)
 
+    @mock.patch('heatingScheduler.sheduler.check', return_value=False)
     def test_scheduler_heatingNotRequired(self):
         ''' Checks that the heatingOff function is called.
         '''
-        @mock.patch('heatingScheduler.sheduler.check', return_value=False)
         heatingScheduler.run(self.XML)
         self.assertTrue(False)
 
