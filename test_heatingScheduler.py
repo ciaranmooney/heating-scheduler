@@ -29,12 +29,12 @@ class TestRun(unittest.TestCase):
             produces the correct error.
         '''
 
-        self.XML = 'test-data/schedule-1.xml'
+        self.XML = 'test-data/scheduleError1.xml'
         heatingScheduler.run(self.XML)
         self.assertTrue(False)
 
-    @mock.patch('heatingScheduler.sheduler.check', return_value=False)
-    def test_scheduler_heatingNotRequired(self):
+    @mock.patch('heatingScheduler.scheduler.check', return_value=(False,None))
+    def test_scheduler_heatingNotRequired(self, mock_check):
         ''' Checks that the heatingOff function is called.
         '''
         heatingScheduler.run(self.XML)

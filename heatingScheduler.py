@@ -37,7 +37,7 @@ class scheduler(object):
         '''
         '''
         self.tree = ET.parse(scheduleXMLfile)
-        self.root = tree.getroot()
+        self.root = self.tree.getroot()
         self.parse(self.root)
 
     def parse(self, XML):
@@ -71,7 +71,7 @@ class scheduler(object):
             if each.start < time < each.stop:
                 return True, event.temp
         else:
-            return False
+            return False, None
 
 def checkTemp():
     '''
