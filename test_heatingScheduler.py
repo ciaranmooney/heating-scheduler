@@ -34,10 +34,18 @@ class TestRun(unittest.TestCase):
         self.assertTrue(False)
 
     @mock.patch('heatingScheduler.scheduler.check', return_value=(False,None))
-    def test_scheduler_heatingNotRequired(self, mock_check):
+    # XXX Re-write so this can only be called twice. see
+    # http://igorsobreira.com/2013/03/17/testing-infinite-loops.html
+    @mock.patch('heatingScheduler.heatingOn')
+    @mock.patch('heatingScheduler.heatingOff')
+    def test_scheduler_heatingNotRequired(self, mock_check, mock_heatingOn,
+                                            mock_heatingOff):
         ''' Checks that the heatingOff function is called.
         '''
         heatingScheduler.run(self.XML)
+        self.assertFalse(mock_heatingOn.called)
+        self.assertTrue(mock_heatingOff.called)
+        
         self.assertTrue(False)
 
     def test_scheduler_heatingRequiredTempLow(self):

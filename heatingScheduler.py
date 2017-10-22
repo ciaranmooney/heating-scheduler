@@ -11,6 +11,7 @@ DEBUG = True
 SCHEDULE = 'schedule.xml'
 
 from datetime import datetime
+import time
 import xml.etree.ElementTree as ET
 import os
 
@@ -82,6 +83,7 @@ def heatingOn():
     ''' Sends ON command to Arduino mini to turn heating on. The ON command 
         needs to be resent periodically, but this is handled by the arduino.
     '''
+    pass
 
 def heatingOff():
     ''' Sends OFF command to Arduino mini to turn heating off. The OFF command
