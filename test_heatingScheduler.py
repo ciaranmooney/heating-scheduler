@@ -9,6 +9,25 @@ import unittest
 import unittest.mock as mock
 import heatingScheduler
 
+class ErrorAfter(object):
+    '''
+    Callable that will raise `CallableExhausted`
+    exception after `limit` calls
+
+    '''
+    def __init__(self, limit):
+        self.limit = limit
+        self.calls = 0
+
+    def __call__(self):
+        self.calls += 1
+        if self.calls > self.limit:
+            raise CallableExhausted
+
+class CallableExhausted(Exception):
+    pass
+
+
 class TestRun(unittest.TestCase):
     ''' Tests the run function defined in heatingSchedule
     '''
@@ -33,7 +52,7 @@ class TestRun(unittest.TestCase):
         heatingScheduler.run(self.XML)
         self.assertTrue(False)
 
-    @mock.patch('heatingScheduler.scheduler.check', return_value=(False,None))
+    @mock.patch('heatingScheduler.scheduler.check', return_value=(False,None), side_effect=ErrorAfter(2), autospec=True)
     # XXX Re-write so this can only be called twice. see
     # http://igorsobreira.com/2013/03/17/testing-infinite-loops.html
     @mock.patch('heatingScheduler.heatingOn')
@@ -42,6 +61,7 @@ class TestRun(unittest.TestCase):
                                             mock_heatingOff):
         ''' Checks that the heatingOff function is called.
         '''
+        ### Need to mock the time.sleep() function to speed things up.
         heatingScheduler.run(self.XML)
         self.assertFalse(mock_heatingOn.called)
         self.assertTrue(mock_heatingOff.called)
