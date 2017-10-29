@@ -106,6 +106,7 @@ def run(scheduleXMLfile, debug=False):
         now = datetime.now()
         heatingRequired, requiredTemp = schedule.check(now)
         currentTemp = checkTemp()
+        log((heatingRequired,requiredTemp), debug)
         if heatingRequired and (currentTemp < requiredTemp):
             log("Too cool, turning heating on", debug)
             heatingOn()

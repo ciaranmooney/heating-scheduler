@@ -19,10 +19,13 @@ class ErrorAfter(object):
         self.limit = limit
         self.calls = 0
 
-    def __call__(self):
+    def __call__(self, required, temp):
+        print(required, temp)
         self.calls += 1
         if self.calls > self.limit:
             raise CallableExhausted
+
+        return required, temp
 
 class CallableExhausted(Exception):
     pass
@@ -36,6 +39,7 @@ class TestRun(unittest.TestCase):
         '''
         '''
         self.XML = 'test-data/schedule.xml'
+        self.debug = True
 
     def test_scheduler_init(self):
         ''' Test that when run(self.XML) called that a scheduler object is 
@@ -52,17 +56,21 @@ class TestRun(unittest.TestCase):
         heatingScheduler.run(self.XML)
         self.assertTrue(False)
 
-    @mock.patch('heatingScheduler.scheduler.check', return_value=(False,None), side_effect=ErrorAfter(2), autospec=True)
+    @mock.patch('heatingScheduler.scheduler',  
+                side_effect=ErrorAfter(2), autospec=True)
     # XXX Re-write so this can only be called twice. see
     # http://igorsobreira.com/2013/03/17/testing-infinite-loops.html
     @mock.patch('heatingScheduler.heatingOn')
     @mock.patch('heatingScheduler.heatingOff')
-    def test_scheduler_heatingNotRequired(self, mock_check, mock_heatingOn,
-                                            mock_heatingOff):
+    @mock.patch('heatingScheduler.checkTemp')
+    def test_scheduler_heatingNotRequired(self, mock_checkTemp, mock_heatingOff, 
+                                            mock_heatingOn, mock_scheduler):
         ''' Checks that the heatingOff function is called.
         '''
         ### Need to mock the time.sleep() function to speed things up.
-        heatingScheduler.run(self.XML)
+        mock_scheduler.check.return_value((False, None))
+        mock_checkTemp.return_value(25)
+        heatingScheduler.run(self.XML, self.debug)
         self.assertFalse(mock_heatingOn.called)
         self.assertTrue(mock_heatingOff.called)
         
