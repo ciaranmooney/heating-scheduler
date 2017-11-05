@@ -57,7 +57,8 @@ class TestRun(unittest.TestCase):
         heatingScheduler.run(self.XML)
         self.assertTrue(False)
     
-    @mock.patch('time.sleep')
+    @mock.patch('time.sleep') # Simple mock to speed up tests, don't actually
+                              # need to use it.
     @mock.patch('heatingScheduler.heatingOn')
     @mock.patch('heatingScheduler.heatingOff')
     @mock.patch('heatingScheduler.scheduler.check',  
@@ -68,7 +69,6 @@ class TestRun(unittest.TestCase):
                                             mock_timesleep):
         ''' Checks that the heatingOff function is called.
         '''
-        ### Need to mock the time.sleep() function to speed things up.
         mock_checkTemp.return_value(25)
         try:
             heatingScheduler.run(self.XML, self.debug)
@@ -78,12 +78,30 @@ class TestRun(unittest.TestCase):
 
         self.assertFalse(mock_heatingOn.called)
         self.assertTrue(mock_heatingOff.called)
-        
-    def test_scheduler_heatingRequiredTempLow(self):
+       
+
+    @mock.patch('time.sleep') # Simple mock to speed up tests, don't actually
+                              # need to use it.
+    @mock.patch('heatingScheduler.heatingOn')
+    @mock.patch('heatingScheduler.heatingOff')
+    @mock.patch('heatingScheduler.scheduler.check',  
+                side_effect=ErrorAfter(2, True, 25))
+    @mock.patch('heatingScheduler.checkTemp', return_value=20)
+    def test_scheduler_heatingRequiredTempLow(self, mock_checkTemp, mock_scheduler,
+                                                mock_heatingOff,  mock_heatingOn,
+                                                mock_timesleep):
         ''' Checks that the loop calls the heatingOn() function. 
         '''
-        self.assertTrue(False)
+        try:
+            heatingScheduler.run(self.XML, self.debug)
+        except CallableExhausted:
+            # To catch the error thrown by the second loop, see errorAfter()
+            pass
 
+        self.assertTrue(mock_heatingOn.called)
+        self.assertFalse(mock_heatingOff.called)
+
+    
     def test_scheduler_heatingRequiredTempCorrect(self):
         ''' Checks that the loop calls the HeatingOff() function.
         '''
