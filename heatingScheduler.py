@@ -66,13 +66,13 @@ class scheduler(object):
         ''' Check if heat is required, if so what temperature.
         '''
         self.fileChanged()
-        day = now.getdotw() ###
-        time = now.gettime() ###
+        day = now.getdotw() 
+        time = now.gettime() 
         for each in self.events(day):
             if each.start < time < each.stop:
                 return True, event.temp
         else:
-            return False, None
+            return (False, None)
 
 def checkTemp():
     '''
