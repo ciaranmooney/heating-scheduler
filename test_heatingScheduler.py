@@ -40,7 +40,7 @@ class TestRun(unittest.TestCase):
         '''
         '''
         self.XML = 'test-data/schedule.xml'
-        self.debug = True
+        self.debug = False 
 
     def test_scheduler_init(self):
         ''' Test that when run(self.XML) called that a scheduler object is 
@@ -67,9 +67,12 @@ class TestRun(unittest.TestCase):
     def test_scheduler_heatingNotRequired(self, mock_checkTemp, mock_scheduler,
                                             mock_heatingOff, mock_heatingOn,
                                             mock_timesleep):
-        ''' Checks that the heatingOff function is called.
+        ''' The mocked scheduler.check()  returns False (ie heating not 
+            ie required). 
+            
+            Checks that the heatingOff function is called.
+            Checks that the heatingOn function is not called.
         '''
-        mock_checkTemp.return_value(25)
         try:
             heatingScheduler.run(self.XML, self.debug)
         except CallableExhausted:
@@ -90,7 +93,11 @@ class TestRun(unittest.TestCase):
     def test_scheduler_heatingRequiredTempLow(self, mock_checkTemp, mock_scheduler,
                                                 mock_heatingOff,  mock_heatingOn,
                                                 mock_timesleep):
-        ''' Checks that the loop calls the heatingOn() function. 
+        ''' The set temperature is 25 C, the mocked checkTemp() returns a
+            lower temperature, 20C.
+            
+            Checks that the loop calls the heatingOn() function.
+            Checks that the loop does not call the heatingOff() function.
         '''
         try:
             heatingScheduler.run(self.XML, self.debug)
@@ -102,15 +109,48 @@ class TestRun(unittest.TestCase):
         self.assertFalse(mock_heatingOff.called)
 
     
-    def test_scheduler_heatingRequiredTempCorrect(self):
-        ''' Checks that the loop calls the HeatingOff() function.
+    @mock.patch('time.sleep') # Simple mock to speed up tests, don't actually
+                              # need to use it.
+    @mock.patch('heatingScheduler.heatingOn')
+    @mock.patch('heatingScheduler.heatingOff')
+    @mock.patch('heatingScheduler.scheduler.check',  
+                side_effect=ErrorAfter(2, True, 25))
+    @mock.patch('heatingScheduler.checkTemp', return_value=25)
+    def test_scheduler_heatingRequiredTempCorrect(self, mock_checkTemp, 
+                                                    mock_scheduler,
+                                                    mock_heatingOff,
+                                                    mock_heatingOn,
+                                                    mock_timesleep
+                                                    ):
+        ''' The set temperature is 25C, the mocked checkTemp() returns the same
+            temperature.
         '''
         self.assertTrue(False)
 
-    def test_scheduler_heatingRequiredTempHigh(self):
-        ''' Checks that the loop calls the HeatingOff() function.
+    @mock.patch('time.sleep') # Simple mock to speed up tests, don't actually
+                              # need to use it.
+    @mock.patch('heatingScheduler.heatingOn')
+    @mock.patch('heatingScheduler.heatingOff')
+    @mock.patch('heatingScheduler.scheduler.check',  
+                side_effect=ErrorAfter(2, True, 25))
+    @mock.patch('heatingScheduler.checkTemp', return_value=30)
+    def test_scheduler_heatingRequiredTempHigh(self, mock_checkTemp, mock_scheduler,
+                                                mock_heatingOff, mock_heatingOn,
+                                                mock_timesleep):
+        ''' The set temperature is 25C, the mocked checkTemp() returns a higher
+            temperature (30 C). 
+            
+            Checks that the loop calls the heatingOff() function.
+            Checks that the loop doesn't call the heatingOn() function. 
         '''
-        self.assertTrue(False)
+        try:
+            heatingScheduler.run(self.XML, self.debug)
+        except CallableExhausted:
+            # To catch the error thrown by the second loop, see errorAfter()
+            pass
+
+        self.assertFalse(mock_heatingOn.called)
+        self.assertTrue(mock_heatingOff.called)
 
     def test_scheduler_recallafter15seconds(self):
         ''' Checks that the loop re-runs after 15 seconds
