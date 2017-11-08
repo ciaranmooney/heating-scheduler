@@ -55,6 +55,7 @@ class TestRun(unittest.TestCase):
 
         self.XML = 'test-data/scheduleError1.xml'
         heatingScheduler.run(self.XML)
+        # Currently raises xml.etree.ElementTree.ParseError
         self.assertTrue(False)
     
     @mock.patch('time.sleep') # Simple mock to speed up tests, don't actually

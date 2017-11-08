@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<schedule>
+    <monday>
+        <event>
+            <start>0530</start>
+            <stop>0700</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1300</start>
+            <stop>1400</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1930</start>
+            <stop>2100</stop>
+            <temperature>18</temperature>
+        </event>
+    </monday>
+
+    <tuesday>
+        <event>
+            <start>0530</start>
+            <stop>0700</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1930</start>
+            <stop>2100</stop>
+            <temperature>18</temperature>
+        </event>
+    </tuesday>
+
+    <wednesday>
+        <event>
+            <start>0530</start>
+            <stop>0700</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1930</start>
+            <stop>2100</stop>
+            <temperature>18</temperature>
+        </event>
+    </wednesday>
+
+    <thursday>
+        <event>
+            <start>0530</start>
+            <stop>0700</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1930</start>
+            <stop>2100</stop>
+            <temperature>18</temperature>
+        </event>
+    </thursday>
+
+    <friday>
+        <event>
+            <start>0530</start>
+            <stop>0700</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1930</start>
+            <stop>2100</stop>
+            <temperature>18</temperature>
+        </event>
+    </friday>
+
+    <saturday>
+        <event>
+            <start>0530</start>
+            <stop>0700</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1930</start>
+            <stop>2200</stop>
+            <temperature>20</temperature>
+        </event>
+    </saturday>
+
+    <sunday>
+        <event>
+            <start>0530</start>
+            <stop>0700</stop>
+            <temperature>18</temperature>
+        </event>
+        <event>
+            <start>1930</start>
+            <stop>2200</stop>
+            <temperature>20</temperature>
+        </event>
+    </sunday>
+</schedule>
